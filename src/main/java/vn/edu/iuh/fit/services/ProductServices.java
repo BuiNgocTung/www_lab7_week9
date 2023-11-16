@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import vn.edu.iuh.fit.models.Customer;
 import vn.edu.iuh.fit.models.Product;
 import vn.edu.iuh.fit.repositories.CustomerRepository;
@@ -15,6 +16,7 @@ import vn.edu.iuh.fit.repositories.ProductRepository;
 import java.util.List;
 
 @Service
+@Transactional
 public class ProductServices {
     @Autowired
     private ProductRepository repository;

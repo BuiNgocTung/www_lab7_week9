@@ -8,12 +8,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.enums.ProductStatus;
+import vn.edu.iuh.fit.models.CartItem;
 import vn.edu.iuh.fit.models.Customer;
 import vn.edu.iuh.fit.models.Product;
 import vn.edu.iuh.fit.repositories.CustomerRepository;
 import vn.edu.iuh.fit.repositories.ProductRepository;
 import vn.edu.iuh.fit.services.ProductServices;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,18 +29,18 @@ public class ProductController {
     private ProductServices productServices;
     @GetMapping("/products")
     private  String  showCustomerList(
-            HttpSession httpSession,
+            HttpSession session,
             Model model,
             @RequestParam("page")Optional<Integer> page,
             @RequestParam("size")Optional<Integer> size){
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(10);
-        Page<Product> cadidatePage = productServices.findPaginate(currentPage-1,
+        Page<Product> productPage = productServices.findPaginate(currentPage-1,
                 pageSize,"name","asc");
 
-        model.addAttribute("productPage",cadidatePage);
+        model.addAttribute("productPage",productPage);
 
-        int totalPages = cadidatePage.getTotalPages();
+        int totalPages = productPage.getTotalPages();
         if (totalPages >0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1,totalPages)
                     .boxed()
@@ -46,7 +48,7 @@ public class ProductController {
             model.addAttribute("pageNumbers",pageNumbers);
         }
         //tra ve trang web
-        return "product/list";
+        return "admin/product/list";
     }
 
     //show form add
@@ -55,7 +57,7 @@ public class ProductController {
         Product product = new Product();
         model.addAttribute("productAdd",product);
         model.addAttribute("statuses", ProductStatus.values());
-        return "product/add";
+        return "admin/product/add";
     }
     //add
     @PostMapping("/products/add")
@@ -78,7 +80,7 @@ public class ProductController {
         Product Product = productRepository.findById(id).orElse(null);
         model.addAttribute("productUpdate", Product);
         model.addAttribute("statuses", ProductStatus.values());
-        return "product/update"; // Trả về view hiển thị form cập nhật thông tin khách hàng
+        return "admin/product/update"; // Trả về view hiển thị form cập nhật thông tin khách hàng
     }
     //update
     @PostMapping("/products/update/{id}")
@@ -97,5 +99,23 @@ public class ProductController {
         }
         return "redirect:/products";
     }
+// addcart
+        @GetMapping("/products/add2cart/{id}")
+        private  String  add2Cart(HttpSession session, Model model, @PathVariable("id") long id){
+            Object obj = session.getAttribute("items");
+            Product product = productRepository.findById(id).get();
+            HashMap<Long, CartItem> cart = null;
+            if (obj == null)
+                cart = new HashMap<>() ;
+            else
+                cart = (HashMap<Long, CartItem>) obj;
+            CartItem item = new CartItem(product,1);
+            if (cart.get(product.getProduct_id() )!=null);
+               item.setAmount(item.getAmount()+1);
+               cart.put(product.getProduct_id(),item);
 
+               session.setAttribute("items",cart);
+               session.setAttribute("itemsOnCart",cart.size());
+               return "redirect:/products";
+            }
 }

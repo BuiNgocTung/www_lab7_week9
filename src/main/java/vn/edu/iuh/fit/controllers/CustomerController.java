@@ -20,7 +20,7 @@ public class CustomerController {
   private  String  showCustomerList(Model model){
         model.addAttribute("customerPage",customerRepository.findAll());
         //tra ve trang web
-        return "customer/list";
+        return "admin/customer/list";
     }
 
     //show form add
@@ -28,7 +28,7 @@ public class CustomerController {
     public String addCustomer(Model model) {
         Customer customer = new Customer();
         model.addAttribute("customerAdd",customer);
-        return "customer/add";
+        return "admin/customer/add";
     }
 //add
     @PostMapping("/customers/add")
@@ -50,7 +50,7 @@ public class CustomerController {
     public String showUpdateForm(@PathVariable("id") long id, Model model) {
         Customer customer = customerRepository.findById(id).orElse(null);
         model.addAttribute("customerUpdate", customer);
-        return "customer/update"; // Trả về view hiển thị form cập nhật thông tin khách hàng
+        return "admin/customer/update"; // Trả về view hiển thị form cập nhật thông tin khách hàng
     }
 //update
     @PostMapping("/customers/update/{id}")

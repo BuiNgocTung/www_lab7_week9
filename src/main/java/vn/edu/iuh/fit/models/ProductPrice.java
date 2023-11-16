@@ -6,6 +6,7 @@ import vn.edu.iuh.fit.ids.ProductPricePK;
 import java.time.LocalDateTime;
 
 @Entity
+
 @Table(name = "product_price")
 @IdClass(ProductPricePK.class)
 public class ProductPrice {
@@ -26,6 +27,12 @@ public class ProductPrice {
 
     public ProductPrice(Product product, LocalDateTime price_date_time, double price, String note) {
         this.product = product;
+        this.price_date_time = price_date_time;
+        this.price = price;
+        this.note = note;
+    }
+
+    public ProductPrice(LocalDateTime price_date_time, double price, String note) {
         this.price_date_time = price_date_time;
         this.price = price;
         this.note = note;

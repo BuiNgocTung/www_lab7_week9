@@ -1,18 +1,21 @@
 package vn.edu.iuh.fit.models;
 
 import jakarta.persistence.*;
+import org.springframework.transaction.annotation.Transactional;
 import vn.edu.iuh.fit.enums.ProductStatus;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+
 @Table(name = "product")
 @NamedQueries(value = {
         @NamedQuery(name = "Product.findAll", query = "select p from Product p where p.status = ?1"),
         @NamedQuery(name = "Product.findById", query = "select p from Product p where p.product_id = ?1")
         //,...1
 })
+
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
